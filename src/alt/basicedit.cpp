@@ -203,6 +203,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e) {
 			if (hasSelection())
 				cut();
 			else {
+				// go to the start of the line
+				gotoStart();
 				int pos = getPosition();
 				selectLine();
 				cut();
