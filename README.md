@@ -25,7 +25,7 @@ $ cd alt
 $ ./configure --prefix=/usr && make && sudo make install strip
 `````
 
-##Running the program:
+## Running the program:
 `````
 $ alt
 `````
