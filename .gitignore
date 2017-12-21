@@ -1,0 +1,13 @@
+*.o
+*.so
+*~
+*.swp
+*.rpm
+*.gcda
+*.gcno
+Makefile
+autom4te.cache/
+config.log
+config.status
+alt.1
+alt_config.h
