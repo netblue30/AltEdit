@@ -1,0 +1,72 @@
+all: src alt.1
+
+datarootdir=@datarootdir@
+PREFIX=@prefix@
+prefix=@prefix@
+VERSION=@PACKAGE_VERSION@
+NAME=@PACKAGE_NAME@
+PACKAGE_TARNAME=@PACKAGE_TARNAME@
+DOCDIR=@docdir@
+
+
+.PHONY: src
+src:
+	$(MAKE) -C $@ $(MFLAGS)
+
+
+alt.1: src/man/alt.txt
+	./mkman.sh $(VERSION) src/man/alt.txt alt.1
+
+clean:;rm -f build/*; rm -f *.1 *.1.gz; make -C src clean
+
+distclean: clean
+	make -C src distclean
+	rm -f alt_config.h Makefile config.status config.log
+	rm -f  src/alt/config.log src/alt/config.status #fedora fix
+	rm -fr autom4te.cache
+
+realinstall:
+	mkdir -p $(DESTDIR)/$(PREFIX)/bin
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/applications
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/pixmaps
+	mkdir -p $(DESTDIR)/$(PREFIX)/lib/alt
+	mkdir -p $(DESTDIR)/$(DOCDIR)
+	mkdir -p $(DESTDIR)/$(PREFIX)/share/man/man1
+	install -c -m 0755 src/alt/alt $(DESTDIR)/$(PREFIX)/bin/.
+	install -c -m 0755 src/style/style.sh $(DESTDIR)/$(PREFIX)/lib/alt/.
+	install -c -m 0755 src/spell/spell $(DESTDIR)/$(PREFIX)/lib/alt/.
+	install -c -m 0755 src/diff/diff $(DESTDIR)/$(PREFIX)/lib/alt/.
+	install -c -m 0644 COPYING $(DESTDIR)/$(DOCDIR)/.
+	install -c -m 0644 README $(DESTDIR)/$(DOCDIR)/.
+	install -c -m 0644 RELNOTES $(DESTDIR)/$(DOCDIR)/.
+	rm -f alt.1.gz
+	gzip -n9 alt.1
+	install -c -m 0644 alt.1.gz $(DESTDIR)/$(PREFIX)/share/man/man1/.
+
+install: all
+	$(MAKE) realinstall
+
+install-strip: all
+	strip src/ne/ne
+	$(MAKE) realinstall
+
+uninstall:;
+	rm -f $(DESTDIR)/$(PREFIX)/bin/alt
+	rm -fr $(DESTDIR)/$(PREFIX)/share/doc/alt
+	rm -fr $(DESTDIR)/$(PREFIX)/lib/alt
+	rm -fr $(DESTDIR)/$(PREFIX)/share/man/man1/alt.1*
+
+DISTFILES = "src configure configure.ac Makefile.in install.sh mkman.sh COPYING README RELNOTES"
+
+dist:
+	mv config.status config.status.old
+	make distclean
+	mv config.status.old config.status
+	rm -fr $(NAME)-$(VERSION) $(NAME)-$(VERSION).tar.xz
+	mkdir -p $(NAME)-$(VERSION)/test
+	cp -a "$(DISTFILES)" $(NAME)-$(VERSION)
+	tar -cJvf $(NAME)-$(VERSION).tar.xz $(NAME)-$(VERSION)
+	rm -fr $(NAME)-$(VERSION)
+
+cppcheck: clean
+	cppcheck --force .

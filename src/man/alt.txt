@@ -1,0 +1,27 @@
+.TH NED 1 "MONTH YEAR" "VERSION" "alt man page"
+.SH NAME
+AltEdit \- Tiling programming text editor
+.SH SYNOPSIS
+alt [OPTIONS] [files]
+.SH DESCRIPTION
+AltEdit is a Qt5-based tiling programming text editor, featuring four editing windows, C/C++ syntax highlighting,
+auto indentation, bracket matching, and spelling. The editor is integrated with ctags, grep, make and git diff utilities.
+
+.SH OPTIONS
+.TP
+\fB\-\-debug\fR
+Print debug messages.
+.TP
+\fB\-?\fR, \fB\-\-help\fR
+Print options end exit.
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Print software version and exit.
+
+.SH LICENSE
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published
+by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+.PP
+Homepage: http://github.com/netblue30/alt
+
+
