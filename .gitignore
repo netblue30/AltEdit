@@ -10,4 +10,14 @@ autom4te.cache/
 config.log
 config.status
 alt.1
+alt.1.gz
 alt_config.h
+src/alt/.qmake.stash
+src/alt/alt
+src/alt/moc_*
+src/alt/qrc_alt.cpp
+src/diff/.qmake.stash
+src/diff/diff
+src/diff/moc_*
+src/diff/qrc_diff.cpp
+src/spell/spell
