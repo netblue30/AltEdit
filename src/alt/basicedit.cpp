@@ -459,6 +459,7 @@ void MyInfoText::mousePressEvent(QMouseEvent *event) {
 		QMouseEvent *evnew = new QMouseEvent(event->type(), event->localPos(), Qt::LeftButton,
 						     event->buttons(), event->modifiers());
 		QPlainTextEdit::mousePressEvent(evnew);
+		delete evnew;
 		event->accept();
 	}
 	else
