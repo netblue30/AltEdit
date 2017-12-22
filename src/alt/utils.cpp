@@ -193,10 +193,10 @@ void fdebug(const char* fmt, ...) {
 bool check_program(QString program) {
 	// try /usr/bin
 	QString path = QString("/usr/bin/") + program;
-	if (access(path.toUtf8().data(), X_OK) == -1) {
+	if (access(qPrintable(path), X_OK) == -1) {
 		// try /bin
 		path = QString("/bin/") + program;
-		if (access(path.toUtf8().data(), X_OK) == -1)
+		if (access(qPrintable(path), X_OK) == -1)
 			return false;
 	}
 

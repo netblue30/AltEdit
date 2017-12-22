@@ -60,7 +60,7 @@ static int fn(const char *path, const struct stat *ptr, int flag) {
 			QString line = in.readLine();
 			if (line.indexOf(word, 0, cs) != -1) {
 				result += QString("%1:%2\n").arg(path).arg(lineno);
-				result += QString("\t") + line.toUtf8().data() + "\n";
+				result += QString("\t") + line + "\n";
 			}
 		}
 
@@ -83,13 +83,13 @@ QString greputil(GrepDialog *dialog) {
 	file_pattern = dialog->getFpattern();
 
 	word = dialog->getWord();
-	fdebug("look for #%s#\n", word.toUtf8().data());
+	fdebug("look for #%s#\n", qPrintable(word));
 
 	starting_dir = dialog->getSdirectory();
 	if (starting_dir == "./")
 		starting_dir = get_current_dir_name();
 
-	if (ftw(starting_dir.toUtf8().data(), fn, FOPEN_MAX) == -1) {
+	if (ftw(qPrintable(starting_dir), fn, FOPEN_MAX) == -1) {
 		perror("ftw");
 	}
 

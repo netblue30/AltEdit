@@ -36,7 +36,7 @@ QHash<QString, Tag> hash;
 
 static void initialize() {
 	QString cmd = QString("ctags -e -f - -x -R ");
-	char *output = run_program(cmd.toUtf8().data());
+	char *output = run_program(qPrintable(cmd));
 	QString text = QString("");
 
 	if (output) {
@@ -167,7 +167,7 @@ QString function_list(QString file) {
 	QString cmd = QString("ctags -e -f - -x ") + file;
 
 	QString text = file + "\n";
-	char *output = run_program(cmd.toUtf8().data());
+	char *output = run_program(qPrintable(cmd));
 	if (output) {
 		// parse the output file
 		char *ptr = output;

@@ -73,7 +73,7 @@ void MainWindow::saveBufmgr() {
 			if (file == active().bookmarks_[index].file_) {
 				int pos = bm.cursor.position();
 				active().bookmarks_[index].pos_ = pos;
-				fdebug("update bookmark %d, %s, %d\n", index, file.toUtf8().data(), pos);
+				fdebug("update bookmark %d, %s, %d\n", index, qPrintable(file), pos);
 			}
 		}
 	}
@@ -93,7 +93,7 @@ void MainWindow::restoreBufmgr() {
 	if (!file.isEmpty() && !file.isNull()) {
 		for (i = 0; i < MAXBOOKMARKS; i++) {
 			if (active().bookmarks_[i].file_ == file) {
-				fdebug("found %s at pos %d\n", file.toUtf8().data(), active().bookmarks_[i].pos_);
+				fdebug("found %s at pos %d\n", qPrintable(file), active().bookmarks_[i].pos_);
 				active().text_->setPosition(active().bookmarks_[i].pos_);
 				QTextEdit::ExtraSelection selection;
 

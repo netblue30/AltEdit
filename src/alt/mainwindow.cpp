@@ -104,7 +104,6 @@ MainWindow::MainWindow() {
 	split1->addWidget(split11);
 	split1->setStyleSheet("QSplitter::handle{background: #a08080;}");
 
-
 	panel[0].highlighter_ = new Highlighter(panel[0].text_->document());
 	panel[1].highlighter_ = new Highlighter(panel[1].text_->document());
 	panel[2].highlighter_ = new Highlighter(panel[2].text_->document());
@@ -123,7 +122,6 @@ MainWindow::MainWindow() {
 	split3->addWidget(split2);
 	split3->addWidget(infotext_);
 	setCentralWidget(split3);
-
 
 	panel[0].text_->setFocus();
 
@@ -216,6 +214,16 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 	if (maybeSaveAll()) {
 		writeSettings();
 		event->accept();
+		
+		// clean all allocated memory
+		delete panel[0].bufmgr_;
+		delete panel[1].bufmgr_;
+		delete panel[2].bufmgr_;
+		delete panel[3].bufmgr_;
+		delete grep_;
+		delete diff_;
+		delete find_;
+		delete replace_;
 	}
 	else {
 		event->ignore();
@@ -248,7 +256,7 @@ void MainWindow::openFile(QString fileName, bool print_function_list) {
 	// build full file path
 	QFileInfo info(fileName);
 	fileName = info.absoluteFilePath();
-	fdebug("full path %s\n", fileName.toUtf8().data());
+	fdebug("full path %s\n", qPrintable(fileName));
 
 	// update current buffer
 	saveBufmgr();
@@ -261,7 +269,7 @@ void MainWindow::openFile(QString fileName, bool print_function_list) {
 		bool done = false;
 		for (i = 0; i < MAX_PANELS; i++) {
 			if (panel[i].bufmgr_->set(fileName)) {
-				fdebug("active %s\n", fileName.toUtf8().data());
+				fdebug("active %s\n", qPrintable(fileName));
 				active_ = i;
 				restoreBufmgr();
 				done = true;
@@ -272,12 +280,12 @@ void MainWindow::openFile(QString fileName, bool print_function_list) {
 
 		// reuse active if untitled and unmodified,
 		else if (!data->modified_ && data->file_.isEmpty() && data->text_.isEmpty()) {
-			fdebug("reuse untitled %s\n", fileName.toUtf8().data());
+			fdebug("reuse untitled %s\n", qPrintable(fileName));
 			loadFile(fileName);
 			data->file_ = fileName;
 		}
 		else {
-			fdebug("new buffer %s\n", fileName.toUtf8().data());
+			fdebug("new buffer %s\n", qPrintable(fileName));
 			// create a new buffer
 			if (!active().bufmgr_->add(fileName)) {
 				QMessageBox::StandardButton ret;
@@ -327,12 +335,12 @@ bool MainWindow::save() {
 		rv = saveAs();
 	}
 	else {
-		fdebug("save: saving %s\n", data->file_.toUtf8().data());
+		fdebug("save: saving %s\n", qPrintable(data->file_));
 		rv = saveFile(data->file_);
 	}
 
 	if (rv) {
-		fdebug("save: file %s saved\n", data->file_.toUtf8().data());
+		fdebug("save: file %s saved\n", qPrintable(data->file_));
 		// update bufmgr with new file information
 		data->modified_ = false;
 		updateBufmgrActions();
@@ -427,7 +435,7 @@ void MainWindow::find() {
 
 	if (QDialog::Accepted == find_->exec()) {
 		QString word = find_->getWord();
-		fdebug("find %s\n", word.toUtf8().data());
+		fdebug("find %s\n", qPrintable(word));
 		bool rv = active().text_->find(word, find_->getFlags());
 		if (rv)
 			fdebug("found\n");
@@ -465,7 +473,7 @@ void MainWindow::quickSearch(QString word) {
 void MainWindow::quickGrep(QString word) {
 	FLOG();
 	assert(grep_);
-	fdebug("grep #%s#\n", word.toUtf8().data());
+	fdebug("grep #%s#\n", qPrintable(word));
 	if (word.isEmpty())
 		return;
 
@@ -481,7 +489,7 @@ void MainWindow::findNext() {
 	FLOG();
 	assert(find_);
 	QString word = find_->getWord();
-	fdebug("find next %s\n", word.toUtf8().data());
+	fdebug("find next %s\n", qPrintable(word));
 	active().text_->find(word, find_->getFlags());
 	active().text_->setFocus();
 }
@@ -509,7 +517,7 @@ void MainWindow::replaceSlot() {
 		while (active().text_->find(wfind, QTextDocument::FindCaseSensitively))
 			active().text_->replaceSelected(wreplace);
 		replace_->getOut();
-		fdebug("replace all %s %s\n", wfind.toUtf8().data(), wreplace.toUtf8().data());
+		fdebug("replace all %s %s\n", qPrintable(wfind), qPrintable(wreplace));
 	}
 	else if (action == ReplaceDialog::ACTION_REPLACE) {
 		QString wfind = replace_->getWordToFind();
@@ -517,11 +525,11 @@ void MainWindow::replaceSlot() {
 		// replace selected word and look for a new word
 		active().text_->replaceSelected(wreplace);
 		active().text_->find(wfind, QTextDocument::FindCaseSensitively);
-		fdebug("replace %s %s\n", wfind.toUtf8().data(), wreplace.toUtf8().data());
+		fdebug("replace %s %s\n", qPrintable(wfind), qPrintable(wreplace));
 	}
 	else if (action == ReplaceDialog::ACTION_FINDNEXT) {
 		QString wfind = replace_->getWordToFind();
-		fdebug("replace find %s\n", wfind.toUtf8().data());
+		fdebug("replace find %s\n", qPrintable(wfind));
 		active().text_->find(wfind, QTextDocument::FindCaseSensitively);
 	}
 	else
@@ -1044,10 +1052,10 @@ void MainWindow::saveTitledFiles() {
 			if (data.file_.isEmpty())
 				continue;
 			if (data.active_ && data.modified_) {
-				fdebug("saving file %s\n", data.file_.toUtf8().data());
-				FILE *fp = fopen(data.file_.toUtf8().data(), "w");
+				fdebug("saving file %s\n", qPrintable(data.file_));
+				FILE *fp = fopen(qPrintable(data.file_), "w");
 				if (fp) {
-					fprintf(fp, "%s", data.text_.toUtf8().data());
+					fprintf(fp, "%s", qPrintable(data.text_));
 					fclose(fp);
 					data.modified_ = false;
 				}
@@ -1178,9 +1186,9 @@ void MainWindow::functionList() {
 		saveFile(file, false);
 
 	// run ctags
-	if (access(file.toUtf8().data(), R_OK) == 0) {
+	if (access(qPrintable(file), R_OK) == 0) {
 		BCursor b;
-		fdebug("%s\n", file.toUtf8().data());
+		fdebug("%s\n", qPrintable(file));
 		QString text = function_list(file);
 		infotext_->setWordWrapMode(QTextOption::NoWrap);
 		infotext_->setPlainText(text);
@@ -1200,7 +1208,7 @@ void MainWindow::make() {
 	infotext_->setWordWrapMode(QTextOption::WrapAnywhere);
 	infotext_->setPlainText("");
 
-	run_program_window(cmd.toUtf8().data(), infotext_);
+	run_program_window(qPrintable(cmd), infotext_);
 	infotext_->insertPlainText("all done\n");
 	updateBufmgrActions();
 	active().text_->setFocus();
@@ -1228,14 +1236,14 @@ void MainWindow::spell() {
 	linestr = linestr.replace(QChar('&'), QChar(' '));
 	linestr = linestr.replace(QChar('|'), QChar(' '));
 	linestr = linestr.replace(QChar('='), QChar(' '));
-	fdebug("spelling %s\n", linestr.toUtf8().data());
+	fdebug("spelling %s\n", qPrintable(linestr));
 
 	QString cmd = QString(PREFIX) + "/lib/alt/spell " + linestr;
 	infotext_->setWordWrapMode(QTextOption::WrapAnywhere);
 	infotext_->setPlainText("");
 	qApp->processEvents();
 
-	run_program_window(cmd.toUtf8().data(), infotext_);
+	run_program_window(qPrintable(cmd), infotext_);
 	infotext_->insertPlainText("all done\n");
 	updateBufmgrActions();
 	active().text_->setFocus();
@@ -1266,12 +1274,12 @@ void MainWindow::diff() {
 
 			// build ndif --git command
 			cmd += QString("--git ");
-			cmd += active().bufmgr_->active()->file_.toUtf8().data();
+			cmd += active().bufmgr_->active()->file_;
 		}
 
 		qApp->processEvents();
-		fdebug("starting \"%s\"\n", cmd.toUtf8().data());
-		run_program_fork(cmd.toUtf8().data());
+		fdebug("starting \"%s\"\n", qPrintable(cmd));
+		run_program_fork(qPrintable(cmd));
 		active().text_->setFocus();
 	}
 
@@ -1294,8 +1302,8 @@ void MainWindow::astyle() {
 		return;
 
 	// build command and run it
-	QString cmd = QString("bash -c \"") + QString(PREFIX) + "/lib/alt/style.sh " + active().bufmgr_->active()->file_.toUtf8().data() + QString("\"");
-	char *out = run_program(cmd.toUtf8().data());
+	QString cmd = QString("bash -c \"") + QString(PREFIX) + "/lib/alt/style.sh " + qPrintable(active().bufmgr_->active()->file_) + QString("\"");
+	char *out = run_program(qPrintable(cmd));
 	if (!out) {
 		QMessageBox::warning(this, tr("AltEdit"),
 				     tr("Cannot run code styler."));
@@ -1315,7 +1323,7 @@ void MainWindow::astyle() {
 void MainWindow::metaPressed() {
 	FLOG();
 	QString word = active().text_->wordAtCursor();
-	fdebug("word #%s#\n", word.toUtf8().data());
+	fdebug("word #%s#\n", qPrintable(word));
 
 	int line;
 	QString text = get_tags(word, &line);

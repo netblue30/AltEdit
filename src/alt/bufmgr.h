@@ -50,7 +50,7 @@ public:
 		for (i = 0; i < MAXBUFMGR; i++)  {
 			if (data_[i].active_)
 				printf("%d: %s %s %s\n",  i, (data_[i].active_)? "active": "inactive",
-					data_[i].file_.toUtf8().data(), (data_[i].modified_)? "modified": "not modified");
+					qPrintable(data_[i].file_), (data_[i].modified_)? "modified": "not modified");
 		}
 
 	}

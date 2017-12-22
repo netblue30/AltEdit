@@ -32,7 +32,7 @@ void MainWindow::clicked_filebar(bool right) {
 
 	// get full path for the file
 	QString fname = filebar_->getLineText();
-	fdebug("clicked filebar %s\n", fname.toUtf8().data());
+	fdebug("clicked filebar %s\n", qPrintable(fname));
 	openFile(fname);
 	functionList();
 }
@@ -46,12 +46,19 @@ void MainWindow::clicked_info(bool right) {
 
 	assert(infotext_);
 	QString txt = infotext_->getLineText();
-	fdebug("clicked_info: %s\n", txt.toUtf8().data());
+	char *str = strdup(qPrintable(txt));
+	if (!str) {
+		perror("strdup");
+		return;
+	}
+	fdebug("clicked_info: %s\n", str);
 
 	// parse text line
-	char *str = txt.toUtf8().data();
-	if (*str == ' ' || *str == '\t')
+	if (*str == ' ' || *str == '\t') {
+		free(str);
 		return;
+	}
+	
 	char *ptr = strchr(str, '\n');
 	if (ptr)
 		*ptr = '\0';
@@ -61,11 +68,15 @@ void MainWindow::clicked_info(bool right) {
 
 	// the line number
 	char *nstr = strchr(str, ':');
-	if (!nstr)
+	if (!nstr) {
+		free(str);
 		return;
+	}
 	*nstr = '\0';
-	if (*(++nstr) == '\0')
+	if (*(++nstr) == '\0') {
+		free(str);
 		return;
+	}
 
 	// after ptr
 	//  - make output
@@ -85,8 +96,10 @@ void MainWindow::clicked_info(bool right) {
 
 	// check file and line number
 	int line = atoi(nstr);
-	if (line < 0)
+	if (line < 0) {
+		free(str);
 		return;
+	}
 
 	if (right) {
 		QString out = open_tagged_file(str);
@@ -97,22 +110,28 @@ void MainWindow::clicked_info(bool right) {
 		QString file = QString(str);
 		if (!file.isEmpty()) {
 			// try to access the file
-			if (access(file.toUtf8().data(), R_OK))
+			if (access(str, R_OK)) {
+				free(str);
 				return;
+			}
 		}
 		else {
 			// the first line could be the file name
 			file = infotext_->getFirstLineText();
 			file.chop(1); // remove '\n"
 
-			if (access(file.toUtf8().data(), R_OK))
-				file = QString("");
+			if (access(qPrintable(file), R_OK)) {
+				free(str);
+				return;
+			}
 		}
 
-		fdebug("clicked_info: processing #%s# %d\n", file.toUtf8().data(), line);
+		fdebug("clicked_info: processing #%s# %d\n", qPrintable(file), line);
 		openFile(file);
 		active().text_->setLine(line);
 	}
+	
+	free(str);
 }
 
 void MainWindow::clicked0(bool right) {
@@ -175,7 +194,7 @@ void MainWindow::clicked3(bool right) {
 
 void MainWindow::clicked_bufmgr(QAction *action) {
 	FLOG();
-	fdebug("clicked_bufmgr: %s\n", action->text().toUtf8().data());
+	fdebug("clicked_bufmgr: %s\n", qPrintable(action->text()));
 	saveBufmgr();
 
 	// goto next buffer

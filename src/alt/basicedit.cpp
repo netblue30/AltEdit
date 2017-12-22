@@ -79,7 +79,11 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e) {
 		case Qt::Key_Return: {
 			QString line = getLineText();
 			int col = getColumnNumber();
-			char *start = line.toUtf8().data();
+			char *start = strdup(qPrintable(line));
+			if (!start) {
+				perror("strdup");
+				return;
+			}
 			char *ptr = start;
 			int col_cnt = 0;
 			while ((*ptr == ' ' || *ptr == '\t') && col_cnt < col) {
@@ -88,6 +92,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e) {
 			}
 			*ptr = '\0';
 			insertPlainText(QString("\n") + QString(start));
+			free(start);
 			emit textModified();
 			return;
 		}
@@ -204,7 +209,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e) {
 				cut();
 			else {
 				// go to the start of the line
-				gotoStart();
+				gotoStartLine();
 				int pos = getPosition();
 				selectLine();
 				cut();
@@ -223,7 +228,7 @@ void MyTextEdit::selectCodeBlock() {
 
 	int pos = getPosition();
 	QString str = this->toPlainText();
-	char *text = strdup(str.toUtf8().data() + pos);
+	char *text = strdup(qPrintable(str) + pos);
 	if (!text) {
 		perror("strdup");
 		return;
@@ -274,12 +279,12 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 	}
 	else if (act && act->text() == QString("Quick search")) {
 		QString word = wordAtCursor();
-		fdebug("search %s\n", word.toUtf8().data());
+		fdebug("search %s\n", qPrintable(word));
 		emit search(word);
 	}
 	else if (act && act->text() == QString("Quick grep")) {
 		QString word = wordAtCursor();
-		fdebug("grep %s\n", word.toUtf8().data());
+		fdebug("grep %s\n", qPrintable(word));
 		emit grep(word);
 	}
 	else if (act && act->text() == QString("{}")) {
@@ -362,7 +367,7 @@ void MyFileBar::updateFiles(bool force) {
 	if (force) {
 		if (wd_ != -1)
 			inotify_rm_watch(fd_, wd_);
-		wd_ = inotify_add_watch(fd_, dirname_.toUtf8().data(), IN_MOVE | IN_CREATE | IN_DELETE);
+		wd_ = inotify_add_watch(fd_, qPrintable(dirname_), IN_MOVE | IN_CREATE | IN_DELETE);
 		fdebug("inotify fd_ %d, wd_ %d\n", fd_, wd_);
 	}
 	else {
@@ -376,7 +381,7 @@ void MyFileBar::updateFiles(bool force) {
 	}
 
 	fdebug("filebar_ update\n");
-	DIR *dir = opendir(dirname_.toUtf8().data());
+	DIR *dir = opendir(qPrintable(dirname_));
 	if (!dir) {
 		perror("opendir");
 		return;
@@ -419,7 +424,7 @@ void MyFileBar::mouseReleaseEvent(QMouseEvent *event) {
 	QString fname = getLineText();
 
 	struct stat s;
-	if (stat(fname.toUtf8().data(), &s) == -1) {
+	if (stat(qPrintable(fname), &s) == -1) {
 		perror("stat");
 		goto normal_exit;
 	}
@@ -451,7 +456,6 @@ void MyInfoText::mousePressEvent(QMouseEvent *event) {
 	FLOG();
 
 	if (event->button() == Qt::RightButton) {
-		printf("6*****************\n");
 		QMouseEvent *evnew = new QMouseEvent(event->type(), event->localPos(), Qt::LeftButton,
 						     event->buttons(), event->modifiers());
 		QPlainTextEdit::mousePressEvent(evnew);

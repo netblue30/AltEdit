@@ -105,7 +105,6 @@ Highlighter::Highlighter(QTextDocument *parent): QSyntaxHighlighter(parent) {
 
 
 void Highlighter::highlightBlock(const QString &text) {
-//printf("%s\n", text.toUtf8().data());
 	foreach (const HighlightingRule &rule, highlightingRules) {
 		QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
 		while (matchIterator.hasNext()) {
