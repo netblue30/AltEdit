@@ -124,7 +124,7 @@ void MainWindow::setBookmark0() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -139,7 +139,7 @@ void MainWindow::setBookmark1() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -154,7 +154,7 @@ void MainWindow::setBookmark2() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -169,7 +169,7 @@ void MainWindow::setBookmark3() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -184,7 +184,7 @@ void MainWindow::setBookmark4() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -199,7 +199,7 @@ void MainWindow::setBookmark5() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -214,7 +214,7 @@ void MainWindow::setBookmark6() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -229,7 +229,7 @@ void MainWindow::setBookmark7() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -244,7 +244,7 @@ void MainWindow::setBookmark8() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 
@@ -259,7 +259,7 @@ void MainWindow::setBookmark9() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-			tr("This is an untitled file, you would need to save it firest."));
+			tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 

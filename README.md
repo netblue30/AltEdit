@@ -21,7 +21,7 @@ $ sudo apt-get install build-essential qt5-default qt5-qmake qtbase5-dev-tools l
 ## Compile and install
 `````
 $ git clone http://github.com/netblue30/AltEdit
-$ cd alt
+$ cd AltEdit
 $ ./configure --prefix=/usr && make && sudo make install strip
 `````
 

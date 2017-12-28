@@ -1178,7 +1178,7 @@ void MainWindow::functionList() {
 	QString file = active().bufmgr_->active()->file_;
 	if (file.isEmpty()) {
 		QMessageBox::warning(this, tr("AltEdit"),
-				     tr("This is an untitled file, you would need to save it firest."));
+				     tr("This is an untitled file, you would need to save it first."));
 		return;
 	}
 	// save the current buffer
