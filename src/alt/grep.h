@@ -30,33 +30,35 @@ class GrepDialog: public QDialog {
 public:
 	GrepDialog();
 	bool getIgnoreCase();
+	bool getTargetAnd();
 	void setWord(QString word);
-	QString getWord();
+	QString getWord1();
+	QString getWord2();
 	QString getSdirectory();
 	QString getFpattern();
 
 private slots:
 	void clicked_dir();
 	void clicked_ok();
-
+	void target_and_toggled(bool state);
 
 private:
 	bool hasFocus() {
 		return true;
 	}
 private:
-	QLabel *label_;
-	QLabel *label2_;
-	QLabel *label3_;
-	QLabel *label4_;
 	QPushButton *button_ok_;
 	QPushButton *button_cancel_;
 	QPushButton *button_dir_;
 	QCheckBox *ignore_case_;
 	QLineEdit *sdirectory_;
 	QLineEdit *fpattern_;
-	QLineEdit *text_;
-	QComboBox *combotext_;
+
+	QLineEdit *text1_;
+	QComboBox *combotext1_;
+	QCheckBox *target_and_;
+	QLineEdit *text2_;
+	QComboBox *combotext2_;
 };
 
 #endif

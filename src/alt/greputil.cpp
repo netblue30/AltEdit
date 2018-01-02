@@ -27,7 +27,9 @@
 #include "global.h"
 #include <QRegExp>
 
-QString word;
+QString word1;
+QString word2;
+bool target_and;
 Qt::CaseSensitivity cs; // Qt::CaseInsensitive, Qt::CaseSensitive
 QString starting_dir;
 QString result;
@@ -58,7 +60,14 @@ static int fn(const char *path, const struct stat *ptr, int flag) {
 		while (!in.atEnd()) {
 			lineno++;
 			QString line = in.readLine();
-			if (line.indexOf(word, 0, cs) != -1) {
+
+			if (target_and) {
+				if (line.indexOf(word1, 0, cs) != -1 && line.indexOf(word2, 0, cs) != -1) {
+					result += QString("%1:%2\n").arg(path).arg(lineno);
+					result += QString("\t") + line + "\n";
+				}
+			}
+			else if (line.indexOf(word1, 0, cs) != -1) {
 				result += QString("%1:%2\n").arg(path).arg(lineno);
 				result += QString("\t") + line + "\n";
 			}
@@ -82,8 +91,13 @@ QString greputil(GrepDialog *dialog) {
 
 	file_pattern = dialog->getFpattern();
 
-	word = dialog->getWord();
-	fdebug("look for #%s#\n", qPrintable(word));
+	word1 = dialog->getWord1();
+	fdebug("look for #%s#\n", qPrintable(word1));
+	target_and = dialog->getTargetAnd();
+	if (target_and) {
+		word2 = dialog->getWord2();
+		fdebug("... and for #%s#\n", qPrintable(word2));
+	}
 
 	starting_dir = dialog->getSdirectory();
 	if (starting_dir == "./")
@@ -95,4 +109,3 @@ QString greputil(GrepDialog *dialog) {
 
 	return result;
 }
-

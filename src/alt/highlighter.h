@@ -31,9 +31,27 @@ Q_OBJECT
 
 	public:
 	Highlighter(QTextDocument *parent = 0);
+	void setFile(QString fname);
 
 protected:
 	void highlightBlock(const QString &text) override;
+
+
+private:
+	void configureCpp();
+	void highlightCpp(const QString &text);
+	void configureJava();
+	void highlightJava(const QString &text);
+	void configureXml();
+	void highlightXml(const QString &text);
+
+	typedef enum {
+		CPP,
+		JAVA,
+		XML
+	} HighlightType;
+	HighlightType htype_;
+
 
 private:
 	struct HighlightingRule
@@ -41,18 +59,21 @@ private:
 		QRegularExpression pattern;
 		QTextCharFormat format;
 	};
-	QVector<HighlightingRule> highlightingRules;
 
-	QRegularExpression commentStartExpression;
-	QRegularExpression commentEndExpression;
-	QRegularExpression commentCppExpression;
+	// CPP
+	QVector<HighlightingRule> cppHighlightingRules;
+	QRegularExpression cppCommentStartExpression;
+	QRegularExpression cppCommentEndExpression;
+	QTextCharFormat cppMultiLineCommentFormat;
 
-	QTextCharFormat preprocFormat;
-	QTextCharFormat keywordFormat;
-	QTextCharFormat classFormat;
-	QTextCharFormat singleLineCommentFormat;
-	QTextCharFormat multiLineCommentFormat;
-	QTextCharFormat quotationFormat;
-	QTextCharFormat functionFormat;
+	// JAVA
+	QVector<HighlightingRule> javaHighlightingRules;
+	QRegularExpression javaCommentStartExpression;
+	QRegularExpression javaCommentEndExpression;
+	QTextCharFormat javaMultiLineCommentFormat;
+
+	// XML
+	QVector<HighlightingRule> xmlHighlightingRules;
+
 };
 #endif						  // HIGHLIGHTER_H

@@ -213,7 +213,6 @@ private:
 
 	bool no_ctags_;
 	bool no_make_;
-	bool no_bcpp_;
 	bool no_git_;
 	bool no_hunspell_;
 	bool no_grep_;

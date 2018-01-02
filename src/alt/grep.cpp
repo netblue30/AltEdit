@@ -24,51 +24,64 @@ GrepDialog::GrepDialog(): QDialog() {
 	FLOG();
 	QGridLayout *grid = new QGridLayout();
 
-	// target word
-	label_ = new QLabel(tr("Target: "));
-	text_ = new QLineEdit();
-	combotext_ = new QComboBox();
-	combotext_->setLineEdit(text_);
-	grid->addWidget(label_, 0, 0);
-	grid->addWidget(combotext_, 0, 1, 1, 10);
+	// target word1
+	QLabel *label = new QLabel(tr("Target: "));
+	text1_ = new QLineEdit();
+	combotext1_ = new QComboBox();
+	combotext1_->setLineEdit(text1_);
+	grid->addWidget(label, 0, 0);
+	grid->addWidget(combotext1_, 0, 1, 1, 10);
 
+	// target word2
+	target_and_ = new QCheckBox(tr("and"));
+	target_and_->setChecked(false);
+	text2_ = new QLineEdit();
+	combotext2_ = new QComboBox();
+	combotext2_->setLineEdit(text2_);
+	grid->addWidget(target_and_, 1, 0);
+	grid->addWidget(combotext2_, 1, 1, 1, 10);
+	combotext2_->setEnabled(false);
 
-	label2_ = new QLabel(tr("Starting directory: "));
+	QLabel *label2 = new QLabel(tr("Starting directory: "));
 	sdirectory_ = new QLineEdit();
 	button_dir_ = new QPushButton("...");
 	sdirectory_->setText("./");
-	grid->addWidget(label2_, 1, 0);
-	grid->addWidget(sdirectory_, 1, 1, 1, 9);
-	grid->addWidget(button_dir_, 1, 10);
+	grid->addWidget(label2, 2, 0);
+	grid->addWidget(sdirectory_, 2, 1, 1, 9);
+	grid->addWidget(button_dir_, 2, 10);
 
-	label3_ = new QLabel(tr("File pattern: "));
+	QLabel *label3 = new QLabel(tr("File pattern: "));
 	fpattern_ = new QLineEdit();
 	fpattern_->setText("*.*");
-	grid->addWidget(label3_, 2, 0);
-	grid->addWidget(fpattern_, 2, 1, 1, 10);
+	grid->addWidget(label3, 3, 0);
+	grid->addWidget(fpattern_, 3, 1, 1, 10);
 
 	ignore_case_ = new QCheckBox(tr("Ignore case"));
-	grid->addWidget(ignore_case_, 3, 1);
+	grid->addWidget(ignore_case_, 4, 1);
 
 	// accept/reject
-	grid->setRowMinimumHeight(7, 15);
+	grid->setRowMinimumHeight(8, 15);
 	button_ok_ = new QPushButton(tr("OK"));
 	button_cancel_ = new QPushButton(tr("Cancel"));
-	grid->addWidget(button_ok_, 8, 9);
-	grid->addWidget(button_cancel_, 8, 10);
+	grid->addWidget(button_ok_, 9, 9);
+	grid->addWidget(button_cancel_, 9, 10);
 
 	grid->setContentsMargins(20, 20, 20, 20);
 	setLayout(grid);
 
-//	connect(button_ok_, SIGNAL(clicked()), SLOT(accept()));
 	connect(button_ok_, SIGNAL(clicked()), SLOT(clicked_ok()));
 	connect(button_cancel_, SIGNAL(clicked()), SLOT(reject()));
 	connect(button_dir_, SIGNAL(clicked()), this, SLOT(clicked_dir()));
+	connect(target_and_, SIGNAL(toggled(bool)), this, SLOT(target_and_toggled(bool)));
 	setWindowTitle("grep");
 }
 
 bool GrepDialog::getIgnoreCase() {
 	return ignore_case_->isChecked();
+}
+
+bool GrepDialog::getTargetAnd() {
+	return target_and_->isChecked();
 }
 
 QString GrepDialog::getSdirectory() {
@@ -79,12 +92,17 @@ QString GrepDialog::getFpattern() {
 	return fpattern_->text();
 }
 
-QString GrepDialog::getWord() {
-	return text_->text();
+QString GrepDialog::getWord1() {
+	return text1_->text();
+}
+
+QString GrepDialog::getWord2() {
+	return text2_->text();
 }
 
 void GrepDialog::setWord(QString word) {
-	return text_->setText(word);
+	target_and_->setChecked(false);
+	text1_->setText(word);
 }
 
 void GrepDialog::clicked_dir() {
@@ -98,17 +116,34 @@ void GrepDialog::clicked_dir() {
 
 void GrepDialog::clicked_ok() {
 	FLOG();
-	QString word = text_->text();;
+	QString word = text1_->text();;
 	// check if the word is not already in the list
 	bool found = false;
-	for (int i = 0; i < combotext_->count(); i++) {
-		if (combotext_->itemText(i) == word) {
+	for (int i = 0; i < combotext1_->count(); i++) {
+		if (combotext1_->itemText(i) == word) {
 			found = true;
 			break;
 		}
 	}
 	if (!found)
-		combotext_->insertItem(0, word);
+		combotext1_->insertItem(0, word);
+
+	found = false;
+	word = text2_->text();;
+	for (int i = 0; i < combotext2_->count(); i++) {
+		if (combotext2_->itemText(i) == word) {
+			found = true;
+			break;
+		}
+	}
+	if (!found)
+		combotext2_->insertItem(0, word);
 
 	accept();
 }
+
+void GrepDialog::target_and_toggled(bool state) {
+	(void) state;
+	combotext2_->setEnabled(target_and_->checkState());
+}
+

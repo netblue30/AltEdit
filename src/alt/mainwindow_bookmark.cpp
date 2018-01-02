@@ -84,6 +84,7 @@ void MainWindow::restoreBufmgr() {
 
 	// resore the current text from bufmgr
 	BufMgrData *data = active().bufmgr_->active();
+	active().highlighter_->setFile(active().bufmgr_->active()->file_);
 	active().text_->setPlainText(data->text_);
 
 	// display bookmarks

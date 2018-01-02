@@ -44,11 +44,6 @@ MainWindow::MainWindow() {
 		fprintf(stderr, "Warning: make not installed\n");
 		no_make_ = true;
 	}
-	no_bcpp_ = false;
-	if (!check_program("bcpp")) {
-		fprintf(stderr, "Warning: bcpp not installed\n");
-		no_bcpp_ = true;
-	}
 	no_git_ = false;
 	if (!check_program("git")) {
 		fprintf(stderr, "Warning: git not installed\n");
@@ -214,7 +209,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 	if (maybeSaveAll()) {
 		writeSettings();
 		event->accept();
-		
+
 		// clean all allocated memory
 		delete panel[0].bufmgr_;
 		delete panel[1].bufmgr_;
@@ -257,6 +252,7 @@ void MainWindow::openFile(QString fileName, bool print_function_list) {
 	QFileInfo info(fileName);
 	fileName = info.absoluteFilePath();
 	fdebug("full path %s\n", qPrintable(fileName));
+	active().highlighter_->setFile(fileName);
 
 	// update current buffer
 	saveBufmgr();
@@ -314,6 +310,7 @@ void MainWindow::openFile(QString fileName, bool print_function_list) {
 	}
 
 	filebar_->setDirForFile(active().bufmgr_->active()->file_);
+//	active().highlighter_->setFile(active().bufmgr_->active()->file_);
 	active().text_->setFocus();
 }
 
@@ -473,6 +470,8 @@ void MainWindow::quickSearch(QString word) {
 void MainWindow::quickGrep(QString word) {
 	FLOG();
 	assert(grep_);
+	BCursor b;
+
 	fdebug("grep #%s#\n", qPrintable(word));
 	if (word.isEmpty())
 		return;
@@ -541,6 +540,7 @@ void MainWindow::grep() {
 	assert(grep_);
 
 	if (QDialog::Accepted == grep_->exec()) {
+		BCursor b;
 		QString rv = greputil(grep_);
 		infotext_->setWordWrapMode(QTextOption::NoWrap);
 		infotext_->setPlainText(rv);
@@ -1236,6 +1236,7 @@ void MainWindow::spell() {
 	linestr = linestr.replace(QChar('&'), QChar(' '));
 	linestr = linestr.replace(QChar('|'), QChar(' '));
 	linestr = linestr.replace(QChar('='), QChar(' '));
+	linestr = linestr.replace(QChar('"'), QChar(' '));
 	fdebug("spelling %s\n", qPrintable(linestr));
 
 	QString cmd = QString(PREFIX) + "/lib/alt/spell " + linestr;
