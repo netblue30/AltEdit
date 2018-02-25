@@ -1237,6 +1237,7 @@ void MainWindow::spell() {
 	linestr = linestr.replace(QChar('|'), QChar(' '));
 	linestr = linestr.replace(QChar('='), QChar(' '));
 	linestr = linestr.replace(QChar('"'), QChar(' '));
+	linestr = linestr.replace(QChar('\''), QString("\\'"));
 	fdebug("spelling %s\n", qPrintable(linestr));
 
 	QString cmd = QString(PREFIX) + "/lib/alt/spell " + linestr;
