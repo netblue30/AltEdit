@@ -136,12 +136,14 @@ public:
 		setTextCursor(tc);
 	}
 
-	// select a line including the ending \n
+	// select a line including the ending \n if available
 	void selectLine() {
 		QTextCursor tc = textCursor();
 		tc.movePosition(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
-		tc.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor);
-		tc.movePosition(QTextCursor::Up, QTextCursor::KeepAnchor);
+		if (tc.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor))
+			tc.movePosition(QTextCursor::Up, QTextCursor::KeepAnchor);
+		else
+			tc.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
 		setTextCursor(tc);
 	}
 
