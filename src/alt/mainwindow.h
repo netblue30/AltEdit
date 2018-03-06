@@ -124,7 +124,6 @@ private slots:
 	void setBookmark9();
 
 private:
-	void setStatusModified(bool status);
 	void createActions();
 	void createMenus();
 	void createToolBars();
@@ -157,7 +156,6 @@ private:
 	QLabel *status_selection_;
 	QLabel *status_recording_;
 	QLabel *status_accumulating_;
-	QLabel *status_modified_;
 
 	// menu
 	QMenu *fileMenu;

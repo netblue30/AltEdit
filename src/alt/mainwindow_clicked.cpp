@@ -58,7 +58,7 @@ void MainWindow::clicked_info(bool right) {
 		free(str);
 		return;
 	}
-	
+
 	char *ptr = strchr(str, '\n');
 	if (ptr)
 		*ptr = '\0';
@@ -130,7 +130,7 @@ void MainWindow::clicked_info(bool right) {
 		openFile(file);
 		active().text_->setLine(line);
 	}
-	
+
 	free(str);
 }
 
@@ -277,8 +277,6 @@ void MainWindow::statusDelay() {
 	int line = active().text_->getLineNumber();
 	int col = active().text_->getColumnNumber();
 	status_position_->setText(QString("%1:%2").arg(line).arg(col));
-
-	setStatusModified(panel[0].bufmgr_->active()->modified_);
 }
 
 void MainWindow::selectionChanged() {
@@ -311,6 +309,7 @@ void MainWindow::accumulating(bool status) {
 		status_accumulating_->setText("");
 }
 
+#if 0
 void MainWindow::setStatusModified(bool status) {
 	FLOG();
 
@@ -319,3 +318,4 @@ void MainWindow::setStatusModified(bool status) {
 	else
 		status_modified_->setText("");
 }
+#endif

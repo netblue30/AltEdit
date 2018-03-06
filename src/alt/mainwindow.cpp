@@ -933,8 +933,6 @@ void MainWindow::createToolBars() {
 void MainWindow::createStatusBar() {
 	FLOG();
 
-	status_modified_ = new QLabel("");
-	statusBar()->addPermanentWidget(status_modified_);
 	status_accumulating_ = new QLabel("");
 	statusBar()->addPermanentWidget(status_accumulating_);
 	status_recording_ = new QLabel("");
@@ -1128,17 +1126,15 @@ void MainWindow::setTitleDelay() {
 
 	BufMgrData *data = active().bufmgr_->active();
 	QString shownName;
+
 	if (data->file_.isEmpty())
 		shownName += "untitled";
 	else
 		shownName += data->file_;
 
+	setWindowModified(data->modified_);
 	setWindowFilePath(shownName);
 }
-
-//QString MainWindow::strippedName(const QString &fullFileName) {
-//	return QFileInfo(fullFileName).fileName();
-//}
 
 void MainWindow::updateBufmgrActions(void) {
 	FLOG();
