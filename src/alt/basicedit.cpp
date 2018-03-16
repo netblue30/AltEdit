@@ -257,11 +257,11 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 	menu->addAction("Quick search");
 	menu->addAction("Quick grep");
 
-	QAction *sl = new QAction("Shift left");
+	QAction *sl = new QAction("Shift left", this);
 	sl->setEnabled(false);
 	menu->addAction(sl);
 
-	QAction *sr = new QAction("Shift right");
+	QAction *sr = new QAction("Shift right", this);
 	sr->setEnabled(false);
 	menu->addAction(sr);
 
