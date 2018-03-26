@@ -261,7 +261,7 @@ void MyTextEdit::contextMenuEvent(QContextMenuEvent *event) {
 	sl->setEnabled(false);
 	menu->addAction(sl);
 
-	QAction *sr = new QAction("Shift right");
+	QAction *sr = new QAction("Shift right", this);
 	sr->setEnabled(false);
 	menu->addAction(sr);
 
