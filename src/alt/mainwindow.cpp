@@ -199,8 +199,6 @@ MainWindow::MainWindow() {
 	connect(replace_, SIGNAL(replaceClicked()), this, SLOT(replaceSlot()));
 	grep_ = new GrepDialog();
 	diff_ = new DiffDialog();
-
-
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -1042,8 +1040,6 @@ bool MainWindow::saveAll() {
 
 void MainWindow::saveTitledFiles() {
 	// save all the remaining files
-
-	// panel0
 	for (int j = 0; j < MAX_PANELS; j++) {
 		for (int i = 0; i < panel[j].bufmgr_->size(); i++) {
 			BufMgrData &data = (*panel[j].bufmgr_)[i];
@@ -1061,6 +1057,7 @@ void MainWindow::saveTitledFiles() {
 		}
 	}
 	active().text_->setFocus();
+	setTitle();
 }
 
 void MainWindow::loadFile(const QString &fileName) {
@@ -1178,8 +1175,11 @@ void MainWindow::functionList() {
 		return;
 	}
 	// save the current buffer
-	if (active().bufmgr_->active()->modified_)
+	if (active().bufmgr_->active()->modified_) {
 		saveFile(file, false);
+		active().bufmgr_->active()->modified_ = false;
+		setTitle();
+	}
 
 	// run ctags
 	if (access(qPrintable(file), R_OK) == 0) {
@@ -1269,6 +1269,8 @@ void MainWindow::diff() {
 			}
 			// save the currrent file
 			saveFile(active().bufmgr_->active()->file_, false);
+			active().bufmgr_->active()->modified_ = false;
+			setTitle();
 
 			// build ndif --git command
 			cmd += QString("--git ");
@@ -1298,6 +1300,8 @@ void MainWindow::astyle() {
 	int rv = saveFile(active().bufmgr_->active()->file_, true);
 	if (!rv)
 		return;
+	active().bufmgr_->active()->modified_ = false;
+	setTitle();
 
 	// build command and run it
 	QString cmd = QString("bash -c \"") + QString(PREFIX) + "/lib/alt/style.sh " + qPrintable(active().bufmgr_->active()->file_) + QString("\"");
@@ -1316,6 +1320,7 @@ void MainWindow::astyle() {
 
 	QTimer::singleShot(50, this, SLOT(statusDelay()));
 	active().text_->setFocus();
+	setTitle();
 }
 
 void MainWindow::metaPressed() {
