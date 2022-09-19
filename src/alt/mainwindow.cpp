@@ -39,26 +39,31 @@ MainWindow::MainWindow() {
 		fprintf(stderr, "Warning: ctags not installed\n");
 		no_ctags_ = true;
 	}
+
 	no_make_ = false;
 	if (!check_program("make")) {
 		fprintf(stderr, "Warning: make not installed\n");
 		no_make_ = true;
 	}
+
 	no_git_ = false;
 	if (!check_program("git")) {
 		fprintf(stderr, "Warning: git not installed\n");
 		no_git_ = true;
 	}
+
 	no_hunspell_ = false;
 	if (!check_program("hunspell")) {
 		fprintf(stderr, "Warning: hunspell not installed\n");
 		no_hunspell_ = true;
 	}
+
 	no_grep_ = false;
 	if (!check_program("grep")) {
 		fprintf(stderr, "Warning: grep not installed\n");
 		no_grep_ = true;
 	}
+
 	no_astyle_ = false;
 	if (!check_program("astyle")) {
 		fprintf(stderr, "Warning: astyle not installed\n");
@@ -506,9 +511,27 @@ void MainWindow::replaceSlot() {
 
 	ReplaceDialog::ReplaceAction action = replace_->getAction();
 	fdebug("replace action %d\n", action);
-	if (action == ReplaceDialog::ACTION_CANCEL)
+	if (action == ReplaceDialog::ACTION_CANCEL) {
 		replace_->getOut();
-	else if (action == ReplaceDialog::ACTION_REPLACEALL) {
+		return;
+	}
+	else if (action == ReplaceDialog::ACTION_FINDNEXT) {
+		QString wfind = replace_->getWordToFind();
+		fdebug("replace find %s\n", qPrintable(wfind));
+		active().text_->find(wfind, QTextDocument::FindCaseSensitively);
+		return;
+	}
+
+	if (active_ == 0)
+		textModified0();
+	else if (active_ == 1)
+		textModified1();
+	else if (active_ == 2)
+		textModified2();
+	else if (active_ == 3)
+		textModified3();
+
+	if (action == ReplaceDialog::ACTION_REPLACEALL) {
 		QString wfind = replace_->getWordToFind();
 		QString wreplace = replace_->getReplacement();
 		while (active().text_->find(wfind, QTextDocument::FindCaseSensitively))
@@ -523,11 +546,6 @@ void MainWindow::replaceSlot() {
 		active().text_->replaceSelected(wreplace);
 		active().text_->find(wfind, QTextDocument::FindCaseSensitively);
 		fdebug("replace %s %s\n", qPrintable(wfind), qPrintable(wreplace));
-	}
-	else if (action == ReplaceDialog::ACTION_FINDNEXT) {
-		QString wfind = replace_->getWordToFind();
-		fdebug("replace find %s\n", qPrintable(wfind));
-		active().text_->find(wfind, QTextDocument::FindCaseSensitively);
 	}
 	else
 		assert(0);

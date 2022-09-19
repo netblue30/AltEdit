@@ -226,6 +226,8 @@ restore:
 
 void MainWindow::textModified0() {
 	FLOG();
+	active_ = 0;
+	panel[0].text_->setFocus();
 	BufMgrData *data = panel[0].bufmgr_->active();
 	if (!data->modified_) {
 		data->modified_ = true;
@@ -237,6 +239,8 @@ void MainWindow::textModified0() {
 
 void MainWindow::textModified1() {
 	FLOG();
+	active_ = 1;
+	panel[1].text_->setFocus();
 	BufMgrData *data = panel[1].bufmgr_->active();
 	if (!data->modified_) {
 		data->modified_ = true;
@@ -248,6 +252,8 @@ void MainWindow::textModified1() {
 
 void MainWindow::textModified2() {
 	FLOG();
+	active_ = 1;
+	panel[2].text_->setFocus();
 	BufMgrData *data = panel[2].bufmgr_->active();
 	if (!data->modified_) {
 		data->modified_ = true;
@@ -259,6 +265,8 @@ void MainWindow::textModified2() {
 
 void MainWindow::textModified3() {
 	FLOG();
+	active_ = 1;
+	panel[3].text_->setFocus();
 	BufMgrData *data = panel[3].bufmgr_->active();
 	if (!data->modified_) {
 		data->modified_ = true;
