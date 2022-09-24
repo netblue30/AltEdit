@@ -252,7 +252,7 @@ void MainWindow::textModified1() {
 
 void MainWindow::textModified2() {
 	FLOG();
-	active_ = 1;
+	active_ = 2;
 	panel[2].text_->setFocus();
 	BufMgrData *data = panel[2].bufmgr_->active();
 	if (!data->modified_) {
@@ -265,7 +265,7 @@ void MainWindow::textModified2() {
 
 void MainWindow::textModified3() {
 	FLOG();
-	active_ = 1;
+	active_ = 3;
 	panel[3].text_->setFocus();
 	BufMgrData *data = panel[3].bufmgr_->active();
 	if (!data->modified_) {
