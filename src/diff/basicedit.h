@@ -42,6 +42,14 @@ public:
 
 		// no word wrap
 		setWordWrapMode(QTextOption::NoWrap);
+
+		QFont font("Neue Haas Grotesk Text Pro Medium");
+//		QFont font("Courier New");
+//QString f = font.family();
+//printf("%s\n", f.toStdString().c_str());
+		font.setPointSize(11);
+		font.setStyleHint(QFont::Monospace);
+		this->setFont(font);
 	}
 
 	// line is 1 based

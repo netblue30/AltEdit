@@ -52,7 +52,7 @@ BasicEdit::BasicEdit(): QPlainTextEdit() {
 void BasicEdit::mouseReleaseEvent(QMouseEvent *event) {
 	FLOG();
 
-	if (event->button() == Qt::MidButton) {}
+	if (event->button() == Qt::MiddleButton) {}
 	else
 		emit clicked(event->button() == Qt::RightButton);
 
@@ -67,7 +67,7 @@ void MyTextEdit::mouseReleaseEvent(QMouseEvent *event) {
 
 	BasicEdit::mouseReleaseEvent(event);
 
-	if (event->button() == Qt::MidButton)
+	if (event->button() == Qt::MiddleButton)
 		emit textModified();
 }
 

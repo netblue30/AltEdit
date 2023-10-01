@@ -32,7 +32,7 @@ realinstall:
 	mkdir -p $(DESTDIR)/$(PREFIX)/lib/alt
 	mkdir -p $(DESTDIR)/$(DOCDIR)
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/man/man1
-	install -c -m 0755 src/alt/alt $(DESTDIR)/$(PREFIX)/bin/.
+	install -c -m 0755 src/alt/alt $(DESTDIR)/$(PREFIX)/bin/k2
 	install -c -m 0755 src/style/style.sh $(DESTDIR)/$(PREFIX)/lib/alt/.
 	install -c -m 0755 src/spell/spell $(DESTDIR)/$(PREFIX)/lib/alt/.
 	install -c -m 0755 src/diff/diff $(DESTDIR)/$(PREFIX)/lib/alt/.

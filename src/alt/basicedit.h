@@ -177,7 +177,7 @@ public:
 //		QFont font("Courier New");
 //QString f = font.family();
 //printf("%s\n", f.toStdString().c_str());
-		font.setPointSize(12);
+		font.setPointSize(11);
 		font.setStyleHint(QFont::Monospace);
 		this->setFont(font);
 	}
@@ -246,7 +246,7 @@ public:
 //		QFont font("Courier New");
 //QString f = font.family();
 //printf("%s\n", f.toStdString().c_str());
-		font.setPointSize(12);
+		font.setPointSize(11);
 		font.setStyleHint(QFont::Monospace);
 		this->setFont(font);
 	}
