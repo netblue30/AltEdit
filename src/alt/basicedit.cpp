@@ -39,6 +39,14 @@ BasicEdit::BasicEdit(): QPlainTextEdit() {
 
 	// no word wrap
 	setWordWrapMode(QTextOption::NoWrap);
+
+//	QFont font("Neue Haas Grotesk Text Pro Medium");
+//	QFont font("Courier New");
+//QString f = font.family();
+//printf("%s\n", f.toStdString().c_str());
+//	font.setPointSize(12);
+//	font.setStyleHint(QFont::Monospace);
+//	this->setFont(font);
 }
 
 void BasicEdit::mouseReleaseEvent(QMouseEvent *event) {

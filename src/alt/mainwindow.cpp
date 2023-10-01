@@ -71,6 +71,11 @@ MainWindow::MainWindow() {
 	}
 
 
+//	QFont font("Courier New");
+//	font.setPointSize(20);
+//	font.setStyleHint(QFont::Monospace);
+//	this->setFont(font);
+
 	active_ = 0;
 	panel[0].bufmgr_ = new BufMgr();
 	panel[0].bufmgr_->add("");

@@ -53,28 +53,30 @@ DiffDialog::DiffDialog(): QDialog(), mode_(GIT_MODE) {
 	// files layout
 	QGridLayout *files_layout = new QGridLayout();
 	files_layout->addWidget(label1, 0, 0);
-	files_layout->addWidget(file1_, 0, 1, 1, 2);
-	files_layout->addWidget(button_browse1, 0, 3);
+	files_layout->addWidget(file1_, 0, 1, 1, 4);
+	files_layout->addWidget(button_browse1, 0, 5);
 	files_layout->addWidget(label2, 1, 0);
-	files_layout->addWidget(file2_, 1, 1, 1, 2);
-	files_layout->addWidget(button_browse2, 1, 3);
+	files_layout->addWidget(file2_, 1, 1, 1, 4);
+	files_layout->addWidget(button_browse2, 1, 5);
 	files_box_->setLayout(files_layout);
 
 	// accept/reject
-	grid->addWidget(git_box_, 0, 0, 1, 4);
+	grid->addWidget(git_box_, 0, 0, 1, 7);
 	grid->setRowMinimumHeight(1, 1);
-	grid->addWidget(files_box_, 2, 0, 1, 4);
+	grid->addWidget(files_box_, 2, 0, 1, 7);
 	grid->setRowMinimumHeight(3, 15);
 	QPushButton *button_ok = new QPushButton(tr("OK"));
 	QPushButton *button_cancel = new QPushButton(tr("Cancel"));
-	grid->addWidget(button_ok, 4, 2);
-	grid->addWidget(button_cancel, 4, 3);
+	QLabel *w1 = new QLabel(" ");
+	grid->addWidget(w1, 4, 0);
+	grid->addWidget(button_ok, 5, 5);
+	grid->addWidget(button_cancel, 5, 6);
 
 	connect(button_ok, SIGNAL(clicked()), SLOT(accept()));
 	connect(button_cancel, SIGNAL(clicked()), SLOT(reject()));
 	connect(button_browse1, SIGNAL(clicked()), this, SLOT(clicked_browse1()));
 	connect(button_browse2, SIGNAL(clicked()), this, SLOT(clicked_browse2()));
-	grid->setContentsMargins(20, 20, 20, 20);
+	grid->setContentsMargins(30, 30, 30, 30);
 	setLayout(grid);
 }
 

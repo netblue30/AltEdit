@@ -47,11 +47,13 @@ ReplaceDialog::ReplaceDialog(QString tofind, QString replacement): QDialog() {
 	button_replace_ = new QPushButton(tr("Replace"));
 	button_replaceall_ = new QPushButton(tr("Replace All"));
 	button_cancel_ = new QPushButton(tr("Cancel"));
-	grid->addWidget(button_findnext_, 3, 0);
-	grid->addWidget(button_replace_, 3, 1);
-	grid->addWidget(button_replaceall_, 3, 2);
-	grid->addWidget(button_cancel_, 3, 3);
-	grid->setContentsMargins(20, 20, 20, 20);
+	QLabel *w1 = new QLabel(" ");
+	grid->addWidget(w1, 3, 0);
+	grid->addWidget(button_findnext_, 4, 0);
+	grid->addWidget(button_replace_, 4, 1);
+	grid->addWidget(button_replaceall_, 4, 2);
+	grid->addWidget(button_cancel_, 4, 3);
+	grid->setContentsMargins(30, 30, 30, 30);
 	setLayout(grid);
 
 	connect(button_findnext_, SIGNAL(clicked()), this, SLOT(clicked_findnext()));

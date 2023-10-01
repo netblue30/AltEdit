@@ -29,7 +29,7 @@ FindDialog::FindDialog(): QDialog() {
 	combotext_ = new QComboBox();
 	combotext_->setLineEdit(text_);
 	grid->addWidget(label_, 0, 0);
-	grid->addWidget(combotext_, 0, 1, 1, 2);
+	grid->addWidget(combotext_, 0, 1, 1, 10);
 
 	// checkboxes
 	ignore_case_ = new QCheckBox(tr("Ignore case"));
@@ -43,10 +43,10 @@ FindDialog::FindDialog(): QDialog() {
 	grid->setRowMinimumHeight(4, 15);
 	button_ok_ = new QPushButton(tr("OK"));
 	button_cancel_ = new QPushButton(tr("Cancel"));
-	grid->addWidget(button_ok_, 5, 1);
-	grid->addWidget(button_cancel_, 5, 2);
+	grid->addWidget(button_ok_, 5, 9);
+	grid->addWidget(button_cancel_, 5, 10);
 	setLayout(grid);
-	grid->setContentsMargins(20, 20, 20, 20);
+	grid->setContentsMargins(30, 30, 30, 30);
 
 	connect(button_ok_, SIGNAL(clicked()), SLOT(clicked_ok()));
 	connect(button_cancel_, SIGNAL(clicked()), SLOT(reject()));

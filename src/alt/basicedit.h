@@ -172,7 +172,15 @@ protected:
 class MyTextEdit: public BasicEdit {
 	Q_OBJECT
 public:
-	MyTextEdit(): BasicEdit(), recording_keys_(false) {}
+	MyTextEdit(): BasicEdit(), recording_keys_(false) {
+		QFont font("Neue Haas Grotesk Text Pro Medium");
+//		QFont font("Courier New");
+//QString f = font.family();
+//printf("%s\n", f.toStdString().c_str());
+		font.setPointSize(12);
+		font.setStyleHint(QFont::Monospace);
+		this->setFont(font);
+	}
 	void selectCodeBlock();
 
 signals:
@@ -233,6 +241,14 @@ public:
 		setMaximumHeight(300);
 		setReadOnly(true);
 		setContextMenuPolicy(Qt::PreventContextMenu);
+
+		QFont font("Neue Haas Grotesk Text Pro Medium");
+//		QFont font("Courier New");
+//QString f = font.family();
+//printf("%s\n", f.toStdString().c_str());
+		font.setPointSize(12);
+		font.setStyleHint(QFont::Monospace);
+		this->setFont(font);
 	}
 
 protected:

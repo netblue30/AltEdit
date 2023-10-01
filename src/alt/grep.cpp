@@ -66,7 +66,7 @@ GrepDialog::GrepDialog(): QDialog() {
 	grid->addWidget(button_ok_, 9, 9);
 	grid->addWidget(button_cancel_, 9, 10);
 
-	grid->setContentsMargins(20, 20, 20, 20);
+	grid->setContentsMargins(30, 30, 30, 30);
 	setLayout(grid);
 
 	connect(button_ok_, SIGNAL(clicked()), SLOT(clicked_ok()));
