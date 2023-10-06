@@ -30,11 +30,13 @@
 // function names
 #define DEFAULT_TAG5_COLOR       QColor(255, 255, 160)
 
-Highlighter::Highlighter(QTextDocument *parent): QSyntaxHighlighter(parent), htype_(CPP) {
+Highlighter::Highlighter(QTextDocument *parent): QSyntaxHighlighter(parent), htype_(NONE) {
 	FLOG();
+	configureNone();
 	configureCpp();
 	configureJava();
 	configureXml();
+	configureSh();
 }
 
 void Highlighter::setFile(QString fname) {
@@ -43,16 +45,51 @@ void Highlighter::setFile(QString fname) {
 	if (fname.endsWith(".h") || fname.endsWith(".c") || fname.endsWith(".cpp") || fname.endsWith(".hpp")) {
 		htype_ = CPP;
 	}
-	if (fname.endsWith(".java")) {
+	else if (fname.endsWith(".java")) {
 		htype_ = JAVA;
 	}
 	else if (fname.endsWith(".xml") || fname.endsWith(".html") || fname.endsWith(".qrc") || fname.endsWith(".svg")) {
 		htype_ = XML;
 	}
-	else { // use CPP as default
-		htype_ = CPP;
+	else if (fname.endsWith(".sh")) {
+		htype_ = SH;
+	}
+	else { // use NONE as default
+		htype_ = NONE;
 	}
 	fdebug("New highlighter type %d for %s\n", htype_, qPrintable(fname));
+}
+
+void Highlighter::configureNone() {
+}
+
+void Highlighter::configureSh() {
+	HighlightingRule rule;
+
+	QTextCharFormat keywordFormat;
+	keywordFormat.setForeground(DEFAULT_TAG4_COLOR);
+//	keywordFormat.setFontWeight(QFont::Bold);
+	QStringList keywordPatterns;
+	keywordPatterns << "\\bif\\b" << "\\bthen\\b" << "\\belif\\b" << "\\belse\\b" <<
+			"\\bfi\\b" << "\\btime\\b" << "\\bfor\\b" << "\\bin\\b" <<
+			"\\buntil\\b" << "\\bwhile\\b" << "\\bdo\\b" << "\\bdone\\b" <<
+			"\\bcase\\b" << "\\besac\\b" << "\\bcoproc\\b" << "\\bselect\\b" <<
+			"\\bfunction\\b" << "\\becho\\b" << "\\bgrep\\b" << "\\bless\\b" <<
+			"\\bcp\\b" << "\\bmv\\b"  << "\\bcd\\b" << "\\bexit\\b" << "\\beval\\b"
+			 << "\\bexport\\b" << "\\bset\\b" << "\\bunset\\b";
+	foreach (const QString &pattern, keywordPatterns) {
+		rule.pattern = QRegularExpression(pattern);
+		rule.format = keywordFormat;
+		shHighlightingRules.append(rule);
+	}
+
+	QTextCharFormat singleLineCommentFormat;
+	singleLineCommentFormat.setFontItalic(true);
+	singleLineCommentFormat.setForeground(DEFAULT_TAG3_COLOR);
+	QRegularExpression commentShExpression = QRegularExpression("#[^\n]*");
+	rule.pattern = commentShExpression;
+	rule.format = singleLineCommentFormat;
+	shHighlightingRules.append(rule);
 }
 
 void Highlighter::configureXml() {
@@ -268,6 +305,9 @@ void Highlighter::configureJava() {
 
 void Highlighter::highlightBlock(const QString &text) {
 	switch (htype_) {
+	case NONE:
+		highlightNone(text);
+		break;
 	case CPP:
 		highlightCpp(text);
 		break;
@@ -277,8 +317,25 @@ void Highlighter::highlightBlock(const QString &text) {
 	case XML:
 		highlightXml(text);
 		break;
+	case SH:
+		highlightSh(text);
+		break;
 	default:
 		fprintf(stderr, "Error: unknown highlighting type\n");
+	}
+}
+
+void Highlighter::highlightNone(const QString &text) {
+	(void) text;
+}
+
+void Highlighter::highlightSh(const QString &text) {
+	foreach (const HighlightingRule &rule, shHighlightingRules) {
+		QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
+		while (matchIterator.hasNext()) {
+			QRegularExpressionMatch match = matchIterator.next();
+			setFormat(match.capturedStart(), match.capturedLength(), rule.format);
+		}
 	}
 }
 

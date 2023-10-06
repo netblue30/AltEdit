@@ -38,6 +38,10 @@ protected:
 
 
 private:
+	void configureNone();
+	void highlightNone(const QString &text);
+	void configureSh();
+	void highlightSh(const QString &text);
 	void configureCpp();
 	void highlightCpp(const QString &text);
 	void configureJava();
@@ -46,9 +50,11 @@ private:
 	void highlightXml(const QString &text);
 
 	typedef enum {
+		NONE,
 		CPP,
 		JAVA,
-		XML
+		XML,
+		SH
 	} HighlightType;
 	HighlightType htype_;
 
@@ -75,5 +81,7 @@ private:
 	// XML
 	QVector<HighlightingRule> xmlHighlightingRules;
 
+	// SH
+	QVector<HighlightingRule> shHighlightingRules;
 };
 #endif						  // HIGHLIGHTER_H
